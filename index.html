@@ -4,30 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title></title>
+<script src="config.js"></script>
 <script>
-/* =====================================================================
- * APP_CONFIG: ตั้งค่า/แบรนด์ของระบบ "จุดเดียว" (ย้ายไปบริษัทอื่นแก้เฉพาะบล็อกนี้)
- *  apiUrl       URL ของ Apps Script Web App (ลงท้าย /exec) ที่หน้าเว็บนี้เรียกใช้
- *               *** ถ้าลืมแก้ จะอ่าน/เขียนข้อมูลของระบบเดิม ***
- *               (ถ้าเปิดผ่าน Apps Script เองจะไม่ใช้ค่านี้)
- *  appName      ชื่อระบบ (แท็บเบราว์เซอร์ + หัวหน้าเว็บ)
- *  tagline      คำบรรยายใต้ชื่อระบบ
- *  homeHeading  หัวข้อบนหน้าแรกของผู้ใช้ทั่วไป
- *  logoFiles    ชื่อไฟล์โลโก้ที่ลองโหลดตามลำดับ (วางไว้โฟลเดอร์เดียวกับไฟล์นี้)
- *  logoVersion  เปลี่ยนเลขนี้เมื่อเปลี่ยนโลโก้ เพื่อกันมือถือจำรูปเก่า
- *  faviconUrl   ไอคอนแท็บ (เว้นว่าง = ใช้ไอคอนที่ฝังมาในไฟล์)
- *  preparer     ชื่อ/ตำแหน่งผู้จัดทำรายงาน (เติมในช่องผู้ดำเนินการอัตโนมัติ)
- * ===================================================================== */
-const APP_CONFIG = {
-  apiUrl: 'https://script.google.com/macros/s/AKfycbzv3OyYJbWWrN1NpTk-PCQhWShNo5LIK1sz28xt3B2YCpqPNn-GERH1AKH3VT1EOYXpcQ/exec',
+/* ค่าตั้งต้น (เป็นกลาง) ค่าจริงของแต่ละบริษัทอยู่ที่ config.js ถ้าไม่มี config.js หรือไม่ได้ระบุบางคีย์ จะใช้ค่าตั้งต้นนี้ */
+var APP_DEFAULTS = {
+  apiUrl: '',
   appName: 'ระบบจัดการวัสดุสำนักงาน',
   tagline: 'Office Supplies · เบิก รับเข้า ติดตามสต็อก',
   homeHeading: 'เบิกวัสดุสำนักงาน',
   logoFiles: ['Logo.png', 'logo.png', 'Logo.webp', 'logo.webp'],
   logoVersion: '5',
   faviconUrl: '',
-  preparer: { name: 'ชนัฏฌา บัวสุวรรณ', pos: 'ธุรการจัดซื้อ' }
+  preparer: { name: '', pos: '' }
 };
+var APP_CONFIG = Object.assign({}, APP_DEFAULTS, window.APP_CONFIG || {});
 document.title = APP_CONFIG.appName;
 /* โลโก้: ลองหลายชื่อไฟล์ (GitHub Pages แยกตัวพิมพ์เล็ก/ใหญ่) + ?v= กันมือถือจำผลเก่า */
 var LOGO_TRY=APP_CONFIG.logoFiles.map(function(f){return f+'?v='+APP_CONFIG.logoVersion;});
@@ -38,7 +28,7 @@ function applyBranding(){
     var C=APP_CONFIG, each=function(s,f){Array.prototype.forEach.call(document.querySelectorAll(s),f);};
     each('[data-brand]',function(el){var v=C[el.getAttribute('data-brand')];if(v!=null)el.textContent=v;});
     each('img[data-logo]',function(img){img.src=LOGO_TRY[0];});
-    if(C.faviconUrl)each('link[rel="icon"],link[rel="apple-touch-icon"]',function(l){l.href=C.faviconUrl;});
+    if(C.faviconUrl){var fl=document.querySelector('link[rel="icon"]');if(!fl){fl=document.createElement('link');fl.rel='icon';document.head.appendChild(fl);}fl.href=C.faviconUrl;}
   }catch(e){}
 }
 if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',applyBranding);else applyBranding();

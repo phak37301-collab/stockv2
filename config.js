@@ -20,6 +20,8 @@ window.APP_CONFIG = {
   appName: 'ระบบจัดการวัสดุ',
   tagline: 'Office Supplies · เบิก รับเข้า ติดตามสต็อก',
   homeHeading: 'ระบบเบิก-คืนวัสดุ',
-  logoVersion: '1',
+  logoVersion: '2',
+  logoFiles: ['sticky.gif'],
+  faviconUrl: 'sticky.gif',
   preparer: { name: '', pos: '' }
 };

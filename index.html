@@ -952,6 +952,56 @@ const API_URL = APP_CONFIG.apiUrl;
 })();
 </script>
 <script>
+/* ===== แก้ไขรายละเอียดวัสดุ (แอดมิน): ชื่อ / หน่วย / Stock ขั้นต่ำ (รหัสแก้ไม่ได้, ไม่มีการลบ) ===== */
+async function openEditMat(code) {
+  if (needAdmin()) return;
+  const it = stock.find(x => x.code === code);
+  if (!it || !book) return;
+  const lb = 'display:block;margin:10px 0 3px;font-size:.78rem;font-weight:600;color:#475569';
+  const r = await Swal.fire({
+    title: 'แก้ไขวัสดุ', width: 460, showCancelButton: true, showLoaderOnConfirm: true, allowOutsideClick: false,
+    confirmButtonText: 'ตรวจสอบผลกระทบ', cancelButtonText: 'ยกเลิก', confirmButtonColor: '#4f46e5',
+    html: `<div style="text-align:left;font-size:.85rem">
+      <div style="font-size:.78rem;color:#64748b">รหัส <b style="font-family:monospace;color:#4f46e5">${esc(it.code)}</b> (แก้ไม่ได้) · คลัง ${esc(bookName())}</div>
+      <label style="${lb}" for="em_name">ชื่อวัสดุ</label><input id="em_name" class="inp" maxlength="100" value="${esc(it.name)}">
+      <label style="${lb}" for="em_unit">หน่วย</label><input id="em_unit" class="inp" maxlength="20" value="${esc(it.unit)}">
+      <label style="${lb}" for="em_min">Stock ขั้นต่ำ</label><input id="em_min" type="number" min="0" step="any" class="inp" value="${esc(it.minStock)}">
+      <div style="margin-top:10px;font-size:.72rem;color:#64748b;line-height:1.6">ถ้าเปลี่ยนชื่อ ระบบจะแก้ชื่อในประวัติรับเข้า/เบิกให้ตรงกันด้วย เพื่อให้ยอดคงเหลือไม่เพี้ยน</div></div>`,
+    preConfirm: async () => {
+      try {
+        return await api('previewEditMaterial', Object.assign(admArgs(), { book: book, code: code, name: $('em_name').value, unit: $('em_unit').value, minStock: $('em_min').value }));
+      } catch (e) { Swal.showValidationMessage(esc((e && e.message) || e)); return false; }
+    }
+  });
+  if (!r.isConfirmed || !r.value) return;
+  const p = r.value;
+  if (!p.any) return Swal.fire({ icon: 'info', title: 'ไม่มีการเปลี่ยนแปลง', confirmButtonColor: '#4f46e5' });
+  const line = (label, a, b) => `<div style="margin-bottom:4px"><b>${label}:</b> ${esc(a)} <span style="color:#94a3b8">→</span> <b style="color:#4f46e5">${esc(b)}</b></div>`;
+  let sum = '';
+  if (p.changed.name) sum += line('ชื่อ', p.old.name, p['new'].name);
+  if (p.changed.unit) sum += line('หน่วย', p.old.unit, p['new'].unit);
+  if (p.changed.minStock) sum += line('Stock ขั้นต่ำ', p.old.minStock, p['new'].minStock);
+  const c = p.counts;
+  if (p.changed.name || p.changed.unit) {
+    sum += `<div style="margin-top:10px;padding:8px 10px;border-radius:10px;background:#eef2ff;font-size:.78rem;line-height:1.7;color:#3730a3"><b>จะอัปเดตประวัติตามอัตโนมัติ ${p.total} แถว</b><br>` +
+      (p.changed.name ? `รับเข้า ${c.in} · เบิก ${c.out} · ` : '') + `คำขอเบิก ${c.req} · ประวัติปรับยอด ${c.adj}<br>` +
+      `<span style="color:#64748b">ระบบเทียบยอดคงเหลือก่อน/หลังแก้ ถ้าไม่ตรงจะคืนค่าเดิมทั้งหมดให้เอง</span></div>`;
+  }
+  const d = await Swal.fire({
+    icon: 'question', title: 'ยืนยันการแก้ไข?', width: 460, showCancelButton: true, showLoaderOnConfirm: true, allowOutsideClick: false,
+    confirmButtonText: 'ยืนยันและบันทึก', cancelButtonText: 'ยกเลิก', confirmButtonColor: '#4f46e5',
+    html: `<div style="text-align:left;font-size:.85rem"><div style="font-size:.78rem;color:#64748b;margin-bottom:8px">รหัส <b style="font-family:monospace">${esc(p.code)}</b></div>${sum}</div>`,
+    preConfirm: async () => {
+      try {
+        return await api('editMaterial', Object.assign(admArgs(), { book: book, code: code, name: p['new'].name, unit: p['new'].unit, minStock: p['new'].minStock }));
+      } catch (e) { Swal.showValidationMessage(esc((e && e.message) || e)); return false; }
+    }
+  });
+  if (d.isConfirmed && d.value) {
+    loadAllData();
+    Swal.fire({ icon: 'success', title: 'แก้ไขแล้ว', text: d.value.message, timer: 2600, showConfirmButton: false });
+  }
+}
 /* ===== ยังไม่มีคลัง (ชีทข้อมูล) ===== */
 function noBooks() {
   Swal.fire({ icon: 'info', title: 'ยังไม่ได้เชื่อมคลัง (ชีทข้อมูล)', confirmButtonColor: '#4f46e5',
@@ -2607,7 +2657,7 @@ function stockRow(i, hist) {
     <td class="text-right">${low ? `<span class="need">+${num(Math.max(i.minStock - i.balance, 0))}</span>${hist ? '' : `<div class="text-[10px] text-slate-400 mt-0.5">${num(i.minStock)} − ${i.balance < 0 ? '(' + num(i.balance) + ')' : num(i.balance)}</div>`}` : '<span class="text-slate-300">-</span>'}</td>
     ${hist ? useCells(i) : ''}
     <td class="text-center">${low ? '<span class="pill-low"><i class="fa-solid fa-triangle-exclamation"></i>' + (i.isNeg ? 'ติดลบ' : 'ใกล้หมด') + '</span>' : '<span class="pill-ok"><i class="fa-solid fa-check"></i>ปกติ</span>'}</td>
-    ${hist ? `<td class="text-center whitespace-nowrap"><button class="chip" onclick="viewHistory('${esc(i.code)}')">ประวัติ</button> <button class="chip adj" onclick="openAdj('${esc(i.code)}')">ปรับยอด</button></td>` : ''}</tr>`;
+    ${hist ? `<td class="text-center whitespace-nowrap"><button class="chip" onclick="viewHistory('${esc(i.code)}')">ประวัติ</button> <button class="chip adj" onclick="openAdj('${esc(i.code)}')">ปรับยอด</button> <button class="chip" onclick="openEditMat('${esc(i.code)}')">แก้ไข</button></td>` : ''}</tr>`;
 }
 function stockCard(i, full) {
   const low = i.isLow, pct = i.minStock > 0 ? Math.min(100, Math.round(i.balance / (i.minStock * 2) * 100)) : 100;
@@ -2627,7 +2677,7 @@ function stockCard(i, full) {
     </div>
     <details class="mdet"><summary>รายละเอียด <i class="fa-solid fa-chevron-down text-[9px] ml-1"></i></summary>
       <div class="mgrid">${cell('ยกมา (คลัง)', num(i.inWarehouse))}${cell('ยกมา (หน้าร้าน)', num(i.inFrontStore))}${cell('รับเข้า', num(i.stockIn), 'text-emerald-600')}${cell('เบิกจ่าย', num(i.stockOut), 'text-rose-600')}${full ? cell('พอใช้อีก', left === null ? '-' : num(left) + ' วัน', left !== null && left < 14 ? 'text-rose-600' : '') + cell('แนะนำสั่ง', need ? '+' + num(need) : '-') : ''}</div>
-      ${full ? `<div class="flex gap-2 mt-3"><button class="chip flex-1" onclick="viewHistory('${esc(i.code)}')">ประวัติ</button><button class="chip adj flex-1" onclick="openAdj('${esc(i.code)}')">ปรับยอด</button></div>` : ''}
+      ${full ? `<div class="flex gap-2 mt-3"><button class="chip flex-1" onclick="viewHistory('${esc(i.code)}')">ประวัติ</button><button class="chip adj flex-1" onclick="openAdj('${esc(i.code)}')">ปรับยอด</button><button class="chip flex-1" onclick="openEditMat('${esc(i.code)}')">แก้ไข</button></div>` : ''}
     </details></div>`;
 }
 function renderInventory() {

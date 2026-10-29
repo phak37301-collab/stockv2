@@ -16,10 +16,10 @@
  * ส่วนรายการคลัง (ชีทข้อมูล) ไม่ต้องตั้งที่นี่ ตั้งจากหน้าเว็บ เมนู "จัดการคลัง"
  * ===================================================================== */
 window.APP_CONFIG = {
-  apiUrl: '',
-  appName: 'ระบบจัดการวัสดุสำนักงาน',
+  apiUrl: 'https://script.google.com/macros/s/AKfycbzeDZEPYCoxe9we6zU71fPZJXlbSCs2hN0VuJyMWTrUSrwa-BzyB-YrrBNl_VD3skKYGw/exec',
+  appName: 'ระบบจัดการวัสดุ',
   tagline: 'Office Supplies · เบิก รับเข้า ติดตามสต็อก',
-  homeHeading: 'เบิกวัสดุสำนักงาน',
+  homeHeading: 'ระบบเบิก-คืนวัสดุ',
   logoVersion: '1',
   preparer: { name: '', pos: '' }
 };

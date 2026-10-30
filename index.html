@@ -712,6 +712,105 @@ function logoReplay(img){try{img.classList.remove('jump');void img.offsetWidth;i
  #rpgPanel.bagOn .rtg button{padding:4px}
 }
 </style>
+<style id="spStyle">
+/* ===== หน้าตั้งค่า (แท็บ) ===== */
+#setPage{position:fixed;inset:0;z-index:200;display:none;flex-direction:column;background:#f3f2fb}
+#setPage.open{display:flex}
+.sp-hdr{flex:none;display:flex;align-items:center;gap:12px;padding:12px 16px;padding-top:calc(12px + env(safe-area-inset-top,0px));background:linear-gradient(135deg,#8b5cf6,#4f46e5);color:#fff;box-shadow:0 6px 18px rgba(79,70,229,.25)}
+.sp-back{flex:none;width:40px;height:40px;border-radius:12px;background:rgba(255,255,255,.18);color:#fff;display:grid;place-items:center;font-size:1rem;cursor:pointer;transition:.15s}
+.sp-back:hover{background:rgba(255,255,255,.3)}
+.sp-ttl{font-weight:700;font-size:1.1rem;line-height:1.2;min-width:0}
+.sp-ttl small{display:block;font-weight:400;font-size:.72rem;opacity:.88;margin-top:2px}
+.sp-body{flex:1;display:flex;min-height:0}
+.sp-nav{width:220px;flex:none;padding:14px 10px;overflow:auto;background:#fff;border-right:1px solid #e8e6f7;display:flex;flex-direction:column;gap:4px}
+.sp-tab{display:flex;align-items:center;gap:10px;width:100%;padding:.7rem .9rem;border-radius:12px;font-size:.88rem;color:#475569;font-weight:500;text-align:left;cursor:pointer;transition:.15s}
+.sp-tab i{width:20px;text-align:center;color:#94a3b8}
+.sp-tab:hover{background:#f5f3ff}
+.sp-tab.on{background:#eef2ff;color:#4338ca;font-weight:700}
+.sp-tab.on i{color:#6366f1}
+.sp-main{flex:1;min-width:0;overflow:auto;padding:18px;padding-bottom:130px;-webkit-overflow-scrolling:touch}
+.sp-pane{display:none;max-width:760px;margin:0 auto}
+.sp-pane.on{display:block}
+.sp-card{background:#fff;border:1px solid #e8e6f7;border-radius:18px;padding:16px;margin-bottom:14px;box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.sp-card h3{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.95rem;color:#1e1b4b}
+.sp-card h3 i{color:#6366f1;font-size:.9rem}
+.sp-sub{font-size:.75rem;color:#94a3b8;margin-top:3px;line-height:1.5}
+.sp-f{margin-top:12px}
+.sp-f>label{display:block;font-size:.78rem;font-weight:600;color:#475569;margin-bottom:4px}
+.sp-help{font-size:.72rem;color:#94a3b8;margin-top:4px;line-height:1.55}
+.sp-row{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:14px;padding:10px 12px;border-radius:12px;background:#f8f7ff}
+.sp-t{font-size:.85rem;font-weight:600;color:#334155}
+.sp-sw{position:relative;width:44px;height:26px;flex:none}
+.sp-sw input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer;z-index:2}
+.sp-sw i{position:absolute;inset:0;border-radius:99px;background:#cbd5e1;transition:.2s}
+.sp-sw i::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.25)}
+.sp-sw input:checked+i{background:#6366f1}
+.sp-sw input:checked+i::after{left:21px}
+.sp-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.sp-stat{display:flex;gap:10px;align-items:center;background:#fff;border:1px solid #e8e6f7;border-radius:16px;padding:12px}
+.sp-stat-i{flex:none;width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:1rem}
+.sp-stat-i.ok{background:#d1fae5;color:#047857}
+.sp-stat-i.off{background:#f1f5f9;color:#94a3b8}
+.sp-stat-t{font-size:.68rem;color:#94a3b8}
+.sp-stat-v{font-size:.85rem;font-weight:700;color:#1e1b4b;line-height:1.3}
+.sp-stat-s{font-size:.66rem;color:#94a3b8;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sp-actions{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px}
+.sp-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem .95rem;border-radius:12px;border:1px solid #ddd9f7;background:#fff;color:#4338ca;font-size:.8rem;font-weight:600;cursor:pointer;transition:.15s}
+.sp-btn:hover{border-color:#a5b4fc;background:#f5f3ff}
+.sp-btn.pri{background:linear-gradient(135deg,#8b5cf6,#4f46e5);color:#fff;border-color:transparent;box-shadow:0 6px 14px rgba(79,70,229,.3)}
+.sp-btn.pri:hover{filter:brightness(1.07)}
+.sp-btn.danger{color:#e11d48;border-color:#fecdd3}
+.sp-btn.danger:hover{background:#fff1f2}
+.sp-btn:disabled{opacity:.6;cursor:default}
+.sp-msg{font-size:.76rem;color:#64748b;line-height:1.5}
+.sp-msg .bad{color:#e11d48}
+.sp-hist{margin-top:10px;max-height:300px;overflow:auto;font-size:.78rem}
+.sp-hi{padding:8px 0;border-bottom:1px dashed #e2e8f0;color:#475569}
+.sp-hi b{color:#4f46e5;display:block;margin-bottom:2px}
+.sp-perf{margin-top:10px;font-size:.78rem;color:#334155}
+.sp-tblw{overflow-x:auto}
+.sp-tbl{width:100%;border-collapse:collapse;font-size:.74rem}
+.sp-tbl th{color:#64748b;padding:4px 6px;font-weight:600}
+.sp-tbl td{padding:4px 6px;border-top:1px solid #f1f0fb}
+.sp-mhead{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.sp-search{position:relative;margin-top:12px}
+.sp-search i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:.8rem;pointer-events:none}
+.sp-search .inp{padding-left:2.2rem}
+.sp-chips{display:flex;gap:8px;margin:10px 0 4px}
+.sp-mrow{display:flex;align-items:center;gap:10px;padding:10px 2px;border-bottom:1px solid #f1f0fb}
+.sp-mrow:last-child{border-bottom:0}
+.sp-mmain{flex:1;min-width:0}
+.sp-code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.7rem;font-weight:700;color:#4f46e5;background:#eef2ff;border-radius:6px;padding:1px 6px}
+.sp-mname{font-weight:600;font-size:.88rem;margin-top:3px;color:#1e1b4b;overflow:hidden;text-overflow:ellipsis}
+.sp-msub{font-size:.72rem;color:#94a3b8;margin-top:1px}
+.sp-low{color:#e11d48;font-weight:700}
+.sp-mmin{width:92px;flex:none}
+.sp-mmin label{display:block;font-size:.62rem;color:#94a3b8;margin-bottom:2px}
+.sp-mmin .inp{padding:.4rem .6rem;text-align:right}
+.sp-more{text-align:center;padding:12px 0 2px}
+.sp-empty{padding:22px 8px;text-align:center;color:#94a3b8;font-size:.82rem}
+.sp-brow{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid #e8e6f7;border-radius:12px;margin-top:8px;background:#fcfbff}
+.sp-brow i{color:#6366f1}
+.sp-brow.off{opacity:.6}
+.sp-bn{flex:1;min-width:0;font-weight:600;font-size:.88rem;color:#1e1b4b}
+.sp-tag{font-size:.66rem;font-weight:700;border-radius:99px;padding:2px 9px;background:#f1f5f9;color:#64748b}
+.sp-tag.job{background:#fef3c7;color:#b45309}
+.sp-save{position:absolute;left:0;right:0;bottom:0;z-index:5;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:12px 18px;padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));background:#fff;border-top:1px solid #e8e6f7;box-shadow:0 -8px 24px rgba(30,27,75,.12);transform:translateY(115%);transition:transform .22s ease}
+.sp-save.show{transform:none}
+.sp-save-t{font-size:.82rem;font-weight:600;color:#b45309;display:flex;align-items:center;gap:8px}
+.sp-save-b{display:flex;gap:8px;margin-left:auto}
+@media (max-width:767px){
+  .sp-body{flex-direction:column}
+  .sp-nav{width:auto;flex-direction:row;overflow-x:auto;overflow-y:hidden;border-right:0;border-bottom:1px solid #e8e6f7;padding:8px;gap:6px}
+  .sp-tab{width:auto;flex:none;white-space:nowrap;padding:.5rem .85rem}
+  .sp-tab i{width:auto}
+  .sp-main{padding:12px;padding-bottom:140px}
+  .sp-stats{grid-template-columns:1fr}
+  .sp-save{padding:10px 12px;padding-bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+  .sp-save-b{width:100%}
+  .sp-save-b .sp-btn{flex:1;justify-content:center}
+}
+</style>
 </head>
 <body>
 
@@ -729,7 +828,6 @@ function logoReplay(img){try{img.classList.remove('jump');void img.offsetWidth;i
     <button class="nav" onclick="closeMenu();openAdj()"><i class="fa-solid fa-sliders"></i><span>ปรับยอดสต็อก</span></button>
     <button class="nav" onclick="closeMenu();openMat()"><i class="fa-solid fa-circle-plus"></i><span>เพิ่มวัสดุใหม่</span></button>
     <button class="nav" onclick="closeMenu();openSettings()"><i class="fa-solid fa-gear"></i><span>ตั้งค่า</span></button>
-    <button class="nav" onclick="closeMenu();openBookManager()"><i class="fa-solid fa-database"></i><span>จัดการคลัง</span></button>
     <button class="nav" id="jobNavBtn" onclick="closeMenu();openJob()"><i class="fa-solid fa-book"></i><span>ใบงานเข้าเล่ม</span></button>
     <button class="nav" onclick="closeMenu();openRet()"><i class="fa-solid fa-rotate-left"></i><span>คืนเบิก</span></button>
     <button class="nav" onclick="closeMenu();rpgToggle()"><i class="fa-solid fa-khanda"></i><span>เกมนักล่า (เต็มจอ)</span></button>
@@ -1007,7 +1105,7 @@ function noBooks() {
   Swal.fire({ icon: 'info', title: 'ยังไม่ได้เชื่อมคลัง (ชีทข้อมูล)', confirmButtonColor: '#4f46e5',
     html: isAdmin ? 'เปิดหน้า "จัดการคลัง" เพื่อเชื่อมชีทที่มีอยู่ หรือสร้างจากชีทต้นแบบ'
                   : 'ผู้ดูแลระบบยังไม่ได้ตั้งค่าคลัง กรุณาแจ้งผู้ดูแล<br><span style="font-size:.8rem;color:#64748b">แอดมิน: เข้าสู่ระบบแอดมิน แล้วเลือกเมนู "จัดการคลัง"</span>',
-    confirmButtonText: isAdmin ? 'เปิดหน้าจัดการคลัง' : 'ตกลง' }).then(r => { if (r.isConfirmed && isAdmin) openBookManager(); });
+    confirmButtonText: isAdmin ? 'เปิดหน้าจัดการคลัง' : 'ตกลง' }).then(r => { if (r.isConfirmed && isAdmin) openSettings('books'); });
 }
 /* ===== จัดการคลัง (แอดมิน): เชื่อมชีทที่มีอยู่ / สร้างจากต้นแบบ / ซ่อน / เลือกคลังใบงานเข้าเล่ม ===== */
 const admArgs = () => ({ pw: window.ADMIN_PW || '', dev: window.__dev || '' });
@@ -1022,21 +1120,27 @@ async function openBookManager() {
     const jr = document.querySelector('input[name="bm_job"]:checked');
     rows.forEach((r, i) => { r.job = !!jr && +jr.value === i; });
   };
+  const sheetId = v => { const s = String(v || '').trim(), m = s.match(/\/d\/([A-Za-z0-9_-]{20,})/); return m ? m[1] : (/^[A-Za-z0-9_-]{20,}$/.test(s) ? s : ''); };
   const paint = () => {
-    $('bm_list').innerHTML = rows.length ? rows.map((r, i) => `
+    $('bm_list').innerHTML = rows.length ? rows.map((r, i) => {
+      if (r.removed) return `<div style="border:1px dashed #fca5a5;border-radius:12px;padding:10px;margin-bottom:8px;background:#fff1f2;display:flex;gap:8px;align-items:center;font-size:.8rem;color:#9f1239"><div style="flex:1;line-height:1.5">คลัง "<b>${esc(r.name)}</b>" จะถูกถอดออกจากระบบเมื่อกดบันทึก<br><span style="opacity:.85">ไฟล์ Google Sheets ไม่ถูกลบ เชื่อมกลับได้ด้วยลิงก์</span></div><button type="button" data-act="unremove" data-i="${i}" style="${btn()}">ยกเลิก</button></div>`;
+      const sid = sheetId(r.id);
+      return `
       <div style="border:1px solid #e2e8f0;border-radius:12px;padding:10px;margin-bottom:8px;${r.hidden ? 'opacity:.6;background:#f8fafc' : ''}">
         <div style="display:flex;gap:6px;align-items:center">
           <input class="inp" data-f="name" data-i="${i}" value="${esc(r.name)}" placeholder="ชื่อคลัง เช่น วัสดุสำนักงาน" maxlength="40" style="flex:1;min-width:0">
           <button type="button" data-act="hide" data-i="${i}" style="${btn()}">${r.hidden ? 'แสดง' : 'ซ่อน'}</button>
-          ${r.saved ? '' : `<button type="button" data-act="del" data-i="${i}" style="${btn('color:#dc2626')}">ลบแถว</button>`}
+          ${r.saved ? `<button type="button" data-act="remove" data-i="${i}" style="${btn('color:#dc2626;border-color:#fecdd3')}">ถอดออก</button>` : `<button type="button" data-act="del" data-i="${i}" style="${btn('color:#dc2626')}">ลบแถว</button>`}
         </div>
         <input class="inp" data-f="id" data-i="${i}" value="${esc(r.id)}" placeholder="วางลิงก์ชีท หรือ Spreadsheet ID" style="margin-top:6px;font-size:.78rem;width:100%">
         <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-top:6px;font-size:.78rem">
           <button type="button" data-act="check" data-i="${i}" style="${btn()}">ตรวจชีท</button>
+          ${sid ? `<a href="https://docs.google.com/spreadsheets/d/${sid}/edit" target="_blank" rel="noopener" style="color:#4f46e5;font-weight:600">เปิดชีท</a>` : ''}
           <label style="display:flex;gap:4px;align-items:center;cursor:pointer"><input type="radio" name="bm_job" value="${i}" ${r.job ? 'checked' : ''} ${r.hidden ? 'disabled' : ''}> ใช้ใบงานเข้าเล่ม</label>
           <span data-msg="${i}" style="flex:1;min-width:140px;line-height:1.5">${r.msgHtml || ''}</span>
         </div>
-      </div>`).join('') : '<div style="padding:14px;text-align:center;color:#64748b;font-size:.82rem">ยังไม่มีคลัง กด "เชื่อมชีทที่มีอยู่" หรือ "สร้างจากต้นแบบ" ด้านล่าง</div>';
+      </div>`;
+    }).join('') : '<div style="padding:14px;text-align:center;color:#64748b;font-size:.82rem">ยังไม่มีคลัง กด "เชื่อมชีทที่มีอยู่" หรือ "สร้างจากต้นแบบ" ด้านล่าง</div>';
   };
   const setMsg = (i, html) => { if (rows[i]) rows[i].msgHtml = html; const el = document.querySelector('[data-msg="' + i + '"]'); if (el) el.innerHTML = html; };
   const fmtCheck = r => {
@@ -1051,7 +1155,7 @@ async function openBookManager() {
     html: `<div style="text-align:left;font-size:.85rem">
       <div style="background:#eef2ff;border-radius:10px;padding:8px 12px;margin-bottom:10px;font-size:.78rem;color:#3730a3;line-height:1.6">
         ชีทที่เชื่อมต้อง<b>แชร์ให้บัญชีนี้แบบ "ผู้แก้ไข"</b>: <b>${esc(st.owner || 'บัญชีเจ้าของระบบ (บัญชีที่ Deploy)')}</b><br>
-        ทุกชีทต้องมีแท็บ <b>สรุปรายงาน, รายการวัสดุ, รับเข้า, เบิก</b> เหมือนต้นแบบ · ลบคลังไม่ได้ ใช้ "ซ่อน" แทน (ข้อมูลในชีทยังอยู่)</div>
+        ทุกชีทต้องมีแท็บ <b>สรุปรายงาน, รายการวัสดุ, รับเข้า, เบิก</b> เหมือนต้นแบบ<br><b>ซ่อน</b> = ไม่ขึ้นในเมนู (แสดงกลับได้) · <b>ถอดออก</b> = เอาออกจากระบบ แต่<b>ไฟล์ชีทไม่ถูกลบ</b> เชื่อมกลับได้ด้วยลิงก์ (ถ้ามีคำขอค้างรออนุมัติ จะถอดไม่ได้)</div>
       <div id="bm_list" style="max-height:38vh;overflow:auto;padding:2px"></div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px">
         <button type="button" id="bm_add" style="${btn('padding:6px 12px')}">+ เชื่อมชีทที่มีอยู่</button>
@@ -1064,7 +1168,8 @@ async function openBookManager() {
         <div id="bm_tmsg" style="font-size:.78rem;line-height:1.5;margin-top:4px"></div>
         <div style="display:flex;gap:6px;margin-top:8px"><input id="bm_newname" class="inp" maxlength="40" placeholder="ชื่อคลังใหม่" style="flex:1;min-width:0">
           <button type="button" id="bm_new" style="${btn('padding:6px 12px;background:#eef2ff;border-color:#a5b4fc')}">+ สร้างจากต้นแบบ</button></div>
-        <div style="font-size:.72rem;color:#64748b;margin-top:4px">คัดลอกไฟล์ใหม่ไปไว้ใน Google Drive ของบัญชีเจ้าของระบบ และเพิ่มเข้ารายการให้ทันที (ใช้เวลาประมาณ 10–30 วินาที)</div>
+        <input id="bm_share" class="inp" value="${esc(st.notifyEmail || '')}" placeholder="แชร์ไฟล์ให้อีเมล (คั่นด้วย , ไม่เกิน 5)" style="margin-top:6px;font-size:.78rem;width:100%">
+        <div style="font-size:.72rem;color:#64748b;margin-top:4px;line-height:1.6">ไฟล์ที่สร้างจะ<b>เป็นของบัญชี ${esc(st.owner || 'เจ้าของระบบ (บัญชีที่ Deploy)')}</b> (อยู่ใน Google Drive ของบัญชีนั้น) ใส่อีเมลด้านบนเพื่อแชร์ให้เปิด/แก้ไขไฟล์ได้โดยตรง (Google จะส่งอีเมลแจ้ง) · ไม่แชร์ก็ได้ ระบบนี้ใช้งานได้ทุกคนอยู่แล้ว · ใช้เวลาประมาณ 10–30 วินาที</div>
       </div></div>`,
     didOpen: () => {
       paint();
@@ -1074,6 +1179,11 @@ async function openBookManager() {
         sync(); const i = +t.dataset.i, act = t.dataset.act;
         if (act === 'hide') { rows[i].hidden = !rows[i].hidden; if (rows[i].hidden) rows[i].job = false; paint(); return; }
         if (act === 'del') { rows.splice(i, 1); paint(); return; }
+        if (act === 'remove') {
+          if (!confirm('ถอดคลัง "' + rows[i].name + '" ออกจากระบบ?\n\n• ไฟล์ Google Sheets ไม่ถูกลบ ข้อมูลไม่หาย\n• ผู้ใช้จะไม่เห็นคลังนี้อีก\n• เชื่อมกลับได้ทุกเมื่อด้วยลิงก์ชีท\n\n(จะมีผลเมื่อกด "บันทึกรายการคลัง")')) return;
+          rows[i].removed = true; rows[i].job = false; paint(); return;
+        }
+        if (act === 'unremove') { rows[i].removed = false; paint(); return; }
         if (act === 'check') {
           setMsg(i, '<span style="color:#64748b">กำลังตรวจ...</span>'); t.disabled = true;
           try { setMsg(i, fmtCheck(await api('checkBook', Object.assign(admArgs(), { id: rows[i].id })))); } catch (e) { setMsg(i, '<span style="color:#dc2626">✗ ' + esc((e && e.message) || e) + '</span>'); }
@@ -1095,9 +1205,9 @@ async function openBookManager() {
         if (!name) { tmsg('<span style="color:#dc2626">✗ ตั้งชื่อคลังใหม่ก่อน</span>'); return; }
         const b = $('bm_new'); b.disabled = true; tmsg('<span style="color:#64748b">กำลังคัดลอกชีทต้นแบบ... อย่าปิดหน้านี้</span>');
         try {
-          const res = await api('adminCreateBook', Object.assign(admArgs(), { name: name }));
+          const res = await api('adminCreateBook', Object.assign(admArgs(), { name: name, share: $('bm_share').value }));
           rows.push({ key: res.created.key, name: res.created.name, id: res.created.id, hidden: false, saved: true, job: false, msgHtml: '<span style="color:#16a34a">✓ สร้างแล้ว</span> <a href="' + esc(res.created.url) + '" target="_blank" rel="noopener" style="color:#4f46e5">เปิดชีท</a>' });
-          $('bm_newname').value = ''; paint(); tmsg('<span style="color:#16a34a">✓ ' + esc(res.message) + '</span>');
+          $('bm_newname').value = ''; paint(); tmsg('<span style="color:#16a34a">✓ ' + esc(res.message) + '</span>' + ((res.created.shareFailed || []).length ? '<br><span style="color:#d97706">⚠ แชร์ให้ไม่สำเร็จ: ' + res.created.shareFailed.map(esc).join(', ') + ' (ตรวจอีเมล หรือแชร์เองจาก Google Drive)</span>' : ''));
           const l = $('bm_list'); l.scrollTop = l.scrollHeight;
         } catch (e) { tmsg('<span style="color:#dc2626">✗ ' + esc((e && e.message) || e) + '</span>'); }
         b.disabled = false;
@@ -1107,8 +1217,9 @@ async function openBookManager() {
       sync();
       try {
         return await api('adminSaveBooks', Object.assign(admArgs(), {
-          books: rows.map(x => ({ key: x.key || '', name: x.name, id: x.id, hidden: !!x.hidden })),
-          jobIndex: rows.findIndex(x => x.job) }));
+          books: rows.filter(x => !x.removed).map(x => ({ key: x.key || '', name: x.name, id: x.id, hidden: !!x.hidden })),
+          remove: rows.filter(x => x.removed && x.saved).map(x => x.key),
+          jobIndex: rows.filter(x => !x.removed).findIndex(x => x.job) }));
       } catch (e) { Swal.showValidationMessage(esc((e && e.message) || e)); return false; }
     }
   });
@@ -1153,7 +1264,7 @@ async function adminLogin(pw) {
   isAdmin = true; try { sessionStorage.setItem('adm', pw); } catch (e) {}
   applyRole();
   if (lastAllAdm === false) loadAllData();   // ข้อมูลที่โหลดไว้ก่อนล็อกอินเสร็จเป็นแบบผู้ใช้ทั่วไป (ไม่มีประวัติ) -> โหลดใหม่แบบแอดมิน
-  if (r.isDefault) setTimeout(() => Swal.fire({ icon: 'warning', title: 'ยังใช้รหัสเริ่มต้นอยู่', text: 'เพื่อความปลอดภัย กรุณาตั้งรหัสผ่านใหม่ตอนนี้', confirmButtonText: 'ตั้งรหัสผ่านใหม่', confirmButtonColor: '#4f46e5' }).then(openSettings), 300);
+  if (r.isDefault) setTimeout(() => Swal.fire({ icon: 'warning', title: 'ยังใช้รหัสเริ่มต้นอยู่', text: 'เพื่อความปลอดภัย กรุณาตั้งรหัสผ่านใหม่ตอนนี้', confirmButtonText: 'ตั้งรหัสผ่านใหม่', confirmButtonColor: '#4f46e5' }).then(() => openSettings('sec')), 300);
   return true;
 }
 function clearAdminCache() { try { Object.keys(localStorage).filter(k => k.indexOf('allcA_') === 0).forEach(k => localStorage.removeItem(k)); } catch (e) {} }
@@ -1182,99 +1293,230 @@ async function adminToggle() {
     }
   });
 }
-async function openSettings() {
+/* =====================================================================
+ * หน้าตั้งค่า (แทนหน้าต่างตั้งค่าเดิม) แบ่งเป็นแท็บ: แจ้งเตือน / วัสดุ / คลัง / ความปลอดภัย / ระบบ
+ *  - แจ้งเตือน + ความปลอดภัย ใช้ปุ่ม "บันทึก" ร่วมกัน (แถบล่างจะโผล่เมื่อมีการแก้ไข) เพราะเซิร์ฟเวอร์รับค่าตั้งค่าทั้งชุด
+ *  - วัสดุ: ค้นหา/แก้ Stock ขั้นต่ำในแถว/กด "แก้ไข" เพื่อแก้ชื่อ-หน่วย/เพิ่มวัสดุใหม่
+ *  - คลัง: ดูรายการคลัง แล้วกดเปิดหน้าจัดการคลัง
+ * ===================================================================== */
+var SP = { st: null, tab: 'notify', snap: '', open: false, init: false, q: '', f: 'all', limit: 120, qt: 0 };
+const SP_TABS = [['notify', 'fa-bell', 'แจ้งเตือน'], ['mats', 'fa-boxes-stacked', 'วัสดุ'], ['books', 'fa-database', 'คลัง (ชีทข้อมูล)'], ['sec', 'fa-lock', 'ความปลอดภัย'], ['sys', 'fa-gauge-high', 'ระบบ']];
+const SP_SUB = { notify: 'ตั้งค่าอีเมลและ LINE สำหรับแจ้งเตือนคำขอเบิก', mats: 'ค้นหา แก้ Stock ขั้นต่ำ แก้ชื่อ-หน่วย และเพิ่มวัสดุใหม่', books: 'เชื่อมชีทข้อมูล สร้างคลังใหม่ ซ่อน/แสดงคลัง', sec: 'เปลี่ยนรหัสผ่านแอดมิน และดูประวัติการตั้งค่า', sys: 'ดูเวลาที่ใช้ของแต่ละคำสั่ง' };
+const spSet = (id, html) => { const e = $(id); if (e) e.innerHTML = html; };
+const spVal = () => ({
+  notifyEmail: $('st_mail').value.trim(), webUrl: $('st_url').value.trim(), lineToken: $('st_ltok').value.trim(), lineUserId: $('st_luid').value.trim(),
+  alwaysEmail: $('st_always').checked, lineEnabled: $('st_lon').checked, lineBatchSec: $('st_lbatch').value
+});
+const spDirty = () => !!(SP.open && $('st_mail') && $('st_pw1') && (JSON.stringify(spVal()) !== SP.snap || $('st_pw1').value || $('st_pw2').value || $('st_ltok').value));
+const spSnap = () => { SP.snap = JSON.stringify(spVal()); };
+const spCheck = () => { const b = $('sp_save'); if (b) b.classList.toggle('show', spDirty()); };
+
+function spPaintNotify() {
+  const st = SP.st, mail = String(st.notifyEmail || '').split(',').map(s => s.trim()).filter(Boolean);
+  const lineTxt = !st.lineConfigured ? 'ยังไม่ได้ตั้งค่า' : (st.lineEnabled ? 'เปิดใช้งาน' : 'ปิดอยู่ (ใช้อีเมลแทน)');
+  const tile = (ok, ico, t, v, s) => `<div class="sp-stat"><div class="sp-stat-i ${ok ? 'ok' : 'off'}"><i class="fa-solid ${ico}"></i></div><div class="min-w-0"><div class="sp-stat-t">${t}</div><div class="sp-stat-v">${v}</div><div class="sp-stat-s">${s || '&nbsp;'}</div></div></div>`;
+  const batch = (() => {
+    const o = [[0, 'ไม่รวม ส่งทันทีทุกคำขอ'], [30, 'ภายใน 30 วินาที'], [60, 'ภายใน 1 นาที'], [120, 'ภายใน 2 นาที'], [300, 'ภายใน 5 นาที']];
+    const cur = Number(st.lineBatchSec); if (!o.some(x => x[0] === cur)) o.push([cur, 'ภายใน ' + cur + ' วินาที']);
+    return o.map(x => `<option value="${x[0]}"${x[0] === cur ? ' selected' : ''}>${x[1]}</option>`).join('');
+  })();
+  $('sp_p_notify').innerHTML = `
+    <div class="sp-stats">
+      ${tile(mail.length > 0, 'fa-envelope', 'อีเมลรับแจ้ง', mail.length ? 'ตั้งแล้ว ' + mail.length + ' ที่อยู่' : 'ยังไม่ได้ตั้ง', esc(mail[0] || ''))}
+      ${tile(st.lineConfigured && st.lineEnabled, 'fa-comment-dots', 'LINE', lineTxt, st.lineConfigured ? 'โควตาเดือนนี้ ' + esc(st.lineUsed) + '/' + esc(st.lineLimit) : '')}
+      ${tile(!st.lineQueued, 'fa-hourglass-half', 'คิวรอส่ง LINE', st.lineQueued ? esc(st.lineQueued) + ' คำขอ' : 'ไม่มี', 'รวมการ์ด ' + esc(st.lineBatchSec) + ' วินาที')}
+    </div>
+    <div class="sp-card">
+      <h3><i class="fa-solid fa-envelope"></i>อีเมล</h3><div class="sp-sub">ระบบส่งอีเมลหาแอดมินเมื่อมีคำขอเบิก/คืนใหม่</div>
+      <div class="sp-f"><label for="st_mail">อีเมลรับแจ้ง</label><input id="st_mail" class="inp" inputmode="email" value="${esc(st.notifyEmail)}" placeholder="boss@gmail.com"><div class="sp-help">ใส่ได้หลายอีเมล คั่นด้วยเครื่องหมายจุลภาค ( , )</div></div>
+      <div class="sp-f"><label for="st_url">ลิงก์หน้าเว็บนี้</label><input id="st_url" class="inp" value="${esc(st.webUrl || (location.origin + location.pathname))}"><div class="sp-help">แนบในอีเมลเพื่อให้กดเข้ามาอนุมัติได้เลย</div></div>
+      <div class="sp-row"><div><div class="sp-t">ส่งอีเมลทุกครั้งด้วย</div><div class="sp-help">ปกติส่งอีเมลเฉพาะเมื่อ LINE ส่งไม่สำเร็จ</div></div><label class="sp-sw"><input type="checkbox" id="st_always"${st.alwaysEmail ? ' checked' : ''}><i></i></label></div>
+      <div class="sp-actions"><button type="button" class="sp-btn" onclick="spTestMail()"><i class="fa-solid fa-paper-plane"></i>ส่งอีเมลทดสอบ</button><span id="sp_mailmsg" class="sp-msg"></span></div>
+    </div>
+    <div class="sp-card">
+      <h3><i class="fa-solid fa-comment-dots"></i>LINE</h3><div class="sp-sub">${st.lineConfigured ? 'ตั้งค่าแล้ว · ใช้โควตาเดือนนี้ ' + esc(st.lineUsed) + '/' + esc(st.lineLimit) : 'ยังไม่ได้ตั้งค่า'}</div>
+      <div class="sp-row"><div><div class="sp-t">ส่งแจ้งเตือนทาง LINE</div><div class="sp-help">ถ้าปิด ระบบจะส่งอีเมลแทน</div></div><label class="sp-sw"><input type="checkbox" id="st_lon"${st.lineEnabled ? ' checked' : ''}><i></i></label></div>
+      <div class="sp-f"><label for="st_lbatch">รวมคำขอที่เข้ามาใกล้กันเป็นการ์ดเดียว</label><select id="st_lbatch" class="inp">${batch}</select>
+        <div class="sp-help">คำขอแรกส่งทันที คำขอที่เข้ามาต่อภายในช่วงนี้จะรวมเป็นการ์ดเดียว (นับเป็น 1 ข้อความ ประหยัดโควตา)${st.lineQueued ? ' · ตอนนี้รอส่งอยู่ ' + esc(st.lineQueued) + ' คำขอ' : ''}</div></div>
+      <div class="sp-f"><label for="st_ltok">Channel access token</label><input id="st_ltok" type="password" class="inp" autocomplete="off" placeholder="${st.lineConfigured ? 'ตั้งไว้แล้ว เว้นว่างถ้าไม่เปลี่ยน' : 'วาง token ที่นี่'}"></div>
+      <div class="sp-f"><label for="st_luid">User ID ของแอดมิน</label><input id="st_luid" class="inp" autocomplete="off" value="${esc(st.lineUserId)}" placeholder="ขึ้นต้นด้วย U"></div>
+      <div class="sp-actions"><button type="button" class="sp-btn" onclick="spTestLine()"><i class="fa-solid fa-paper-plane"></i>ส่ง LINE ทดสอบ</button>${st.lineConfigured ? '<button type="button" class="sp-btn danger" onclick="spClearLine()"><i class="fa-solid fa-trash"></i>ลบการตั้งค่า LINE</button>' : ''}<span id="sp_lmsg" class="sp-msg">${st.lineLog ? 'ผลส่งล่าสุด: ' + esc(st.lineLog) : ''}</span></div>
+    </div>`;
+}
+function spPaintSec() {
+  const hist = SP.st.history || [];
+  $('sp_p_sec').innerHTML = `
+    <div class="sp-card">
+      <h3><i class="fa-solid fa-key"></i>เปลี่ยนรหัสผ่านแอดมิน</h3><div class="sp-sub">เว้นว่างถ้าไม่ต้องการเปลี่ยน</div>
+      <div class="sp-f"><label for="st_pw1">รหัสผ่านใหม่</label><input id="st_pw1" type="password" class="inp" placeholder="อย่างน้อย 6 ตัวอักษร" autocomplete="new-password"></div>
+      <div class="sp-f"><label for="st_pw2">พิมพ์รหัสผ่านใหม่อีกครั้ง</label><input id="st_pw2" type="password" class="inp" placeholder="ให้ตรงกับช่องบน" autocomplete="new-password"></div>
+    </div>
+    <div class="sp-card">
+      <h3><i class="fa-solid fa-clock-rotate-left"></i>ประวัติการตั้งค่า</h3><div class="sp-sub">${hist.length ? 'ล่าสุด ' + esc(hist[0].t) + ' · ' + hist.length + ' ครั้ง' : 'ยังไม่มีประวัติ'} · ไม่เก็บ token หรือรหัสผ่านจริง</div>
+      <div class="sp-hist">${hist.length ? hist.map(h => `<div class="sp-hi"><b>${esc(h.t)}</b>${(h.c || []).map(x => `<div>• ${esc(x)}</div>`).join('')}</div>`).join('') : '<div class="sp-help">บันทึกเมื่อมีการแก้ไขการตั้งค่าครั้งต่อไป</div>'}</div>
+    </div>`;
+}
+function spPaintSys() {
+  $('sp_p_sys').innerHTML = `
+    <div class="sp-card">
+      <h3><i class="fa-solid fa-gauge-high"></i>ความเร็วระบบ</h3><div class="sp-sub">เวลาที่ใช้ของแต่ละคำสั่ง ช่วยดูว่าช้าที่ชีทหรือที่เครือข่าย</div>
+      <div class="sp-actions"><button type="button" class="sp-btn" onclick="spPerf(false)"><i class="fa-solid fa-chart-simple"></i>ดูความเร็ว</button><button type="button" class="sp-btn" onclick="spPerf(true)"><i class="fa-solid fa-rotate-right"></i>เริ่มนับใหม่</button></div>
+      <div id="sp_perfout" class="sp-perf"></div>
+    </div>`;
+}
+function spPaintMatsShell() {
+  $('sp_p_mats').innerHTML = `
+    <div class="sp-card">
+      <div class="sp-mhead"><div><h3><i class="fa-solid fa-boxes-stacked"></i>รายการวัสดุ</h3><div class="sp-sub" id="sp_matcount"></div></div>
+        <button type="button" class="sp-btn pri" onclick="spAddMat()"><i class="fa-solid fa-plus"></i>เพิ่มวัสดุใหม่</button></div>
+      <div class="sp-search"><i class="fa-solid fa-magnifying-glass"></i><input id="sp_matq" class="inp" placeholder="ค้นหารหัส / ชื่อวัสดุ" autocomplete="off" value="${esc(SP.q)}"></div>
+      <div class="sp-chips"><button type="button" class="chip${SP.f === 'all' ? ' on' : ''}" data-f="all">ทั้งหมด</button><button type="button" class="chip${SP.f === 'low' ? ' on' : ''}" data-f="low">ใกล้หมด</button></div>
+      <div id="sp_matlist"></div>
+      <div class="sp-help" style="margin-top:10px">แก้ Stock ขั้นต่ำ: พิมพ์ตัวเลขในช่องแล้วกด Enter หรือคลิกที่อื่น (บันทึกทันที) · แก้ชื่อหรือหน่วย: กดปุ่ม "แก้ไข"</div>
+    </div>`;
+}
+function spPaintMats() {
+  const box = $('sp_matlist'); if (!box) return;
+  const q = SP.q.trim().toLowerCase();
+  const all = stock || [];
+  const rows = all.filter(i => (SP.f === 'all' || i.isLow) && (!q || String(i.code).toLowerCase().includes(q) || String(i.name).toLowerCase().includes(q)));
+  const show = rows.slice(0, SP.limit);
+  spSet('sp_matcount', rows.length + (rows.length === all.length ? '' : ' จาก ' + all.length) + ' รายการ · คลัง ' + esc(bookName()));
+  box.innerHTML = show.length ? show.map(i => `
+    <div class="sp-mrow">
+      <div class="sp-mmain"><span class="sp-code">${esc(i.code)}</span><div class="sp-mname">${esc(i.name)}</div>
+        <div class="sp-msub">${esc(i.unit)} · คงเหลือ <span class="${i.isLow ? 'sp-low' : ''}">${num(i.balance)}</span>${i.isLow ? ' · <span class="sp-low">ใกล้หมด</span>' : ''}</div></div>
+      <div class="sp-mmin"><label>ขั้นต่ำ</label><input type="number" min="0" step="any" class="inp sp-min" data-code="${esc(i.code)}" value="${esc(i.minStock)}"></div>
+      <button type="button" class="chip" data-act="edit" data-code="${esc(i.code)}">แก้ไข</button>
+    </div>`).join('') + (rows.length > show.length ? `<div class="sp-more"><button type="button" class="chip" data-act="more">แสดงเพิ่ม (เหลืออีก ${rows.length - show.length} รายการ)</button></div>` : '')
+    : `<div class="sp-empty">${all.length ? 'ไม่พบวัสดุที่ค้นหา' : 'ยังไม่มีข้อมูลวัสดุ (ยังไม่ได้เชื่อมคลัง หรือยังโหลดไม่เสร็จ)'}</div>`;
+}
+function spRefresh() { try { if (typeof SP !== 'undefined' && SP.open && SP.tab === 'mats') spPaintMats(); } catch (e) {} }
+async function spPaintBooks() {
+  const box = $('sp_p_books'); if (!box) return;
+  box.innerHTML = `<div class="sp-card"><h3><i class="fa-solid fa-database"></i>คลัง (ชีทข้อมูล)</h3><div class="sp-sub">แต่ละคลังคือ Google Sheets 1 ไฟล์ · "ซ่อน" = ไม่ขึ้นในเมนู · "ถอดออก" = เอาออกจากระบบ (ไฟล์ชีทไม่ถูกลบ)</div><div id="sp_books" class="sp-help" style="margin-top:12px">กำลังโหลด...</div>
+    <div class="sp-actions"><button type="button" class="sp-btn pri" onclick="spManageBooks()"><i class="fa-solid fa-pen-to-square"></i>จัดการคลัง / เชื่อมชีท / สร้างจากต้นแบบ</button></div></div>`;
+  try {
+    const b = await api('getBookAdmin', admArgs());
+    if (!SP.open || !$('sp_books')) return;
+    const list = (b.books || []).map(x => `<div class="sp-brow${x.hidden ? ' off' : ''}"><i class="fa-solid fa-database"></i><div class="sp-bn">${esc(x.name)}</div>${x.hidden ? '<span class="sp-tag">ซ่อน</span>' : ''}${x.key && x.key === b.jobBookKey ? '<span class="sp-tag job">ใบงานเข้าเล่ม</span>' : ''}${/^[A-Za-z0-9_-]{20,}$/.test(x.id || '') ? `<a class="sp-tag" style="background:#eef2ff;color:#4338ca" href="https://docs.google.com/spreadsheets/d/${esc(x.id)}/edit" target="_blank" rel="noopener">เปิดชีท</a>` : ''}</div>`).join('');
+    spSet('sp_books', (list || '<div class="sp-empty">ยังไม่มีคลัง กดปุ่มด้านล่างเพื่อเชื่อมชีท</div>') + `<div class="sp-help" style="margin-top:8px">ชีทต้นแบบสำหรับสร้างคลังใหม่: ${b.templateId ? 'ตั้งไว้แล้ว' : 'ยังไม่ได้ตั้ง'}<br>ไฟล์ที่สร้างจากต้นแบบจะเป็นของบัญชี <b>${esc(b.owner || 'เจ้าของระบบ')}</b> ถ้าเปิดแล้วขึ้น "ขอสิทธิ์เข้าถึง" ให้ใช้บัญชีนั้น หรือให้เจ้าของแชร์ไฟล์ให้ (ระบบใช้งานได้ปกติโดยไม่ต้องมีสิทธิ์ในไฟล์)</div>`);
+  } catch (e) { spSet('sp_books', '<span style="color:#e11d48">โหลดไม่สำเร็จ: ' + esc((e && e.message) || e) + '</span>'); }
+}
+async function spManageBooks() { await openBookManager(); if (SP.open) spPaintBooks(); }
+function spTab(t) {
+  SP.tab = t;
+  document.querySelectorAll('#sp_nav .sp-tab').forEach(b => b.classList.toggle('on', b.dataset.t === t));
+  document.querySelectorAll('#sp_main .sp-pane').forEach(p => p.classList.toggle('on', p.id === 'sp_p_' + t));
+  spSet('sp_sub', esc(SP_SUB[t] || ''));
+  if (t === 'mats') spPaintMats();
+  if (t === 'books') spPaintBooks();
+  const m = $('sp_main'); if (m) m.scrollTop = 0;
+}
+function spInit() {
+  if (SP.init) return; SP.init = true;
+  const pg = $('setPage');
+  $('sp_back').onclick = () => spClose();
+  $('sp_nav').addEventListener('click', ev => { const b = ev.target.closest('[data-t]'); if (b) spTab(b.dataset.t); });
+  pg.addEventListener('input', ev => {
+    spCheck();
+    if (ev.target.id === 'sp_matq') { const v = ev.target.value; clearTimeout(SP.qt); SP.qt = setTimeout(() => { SP.q = v; SP.limit = 120; spPaintMats(); }, 150); }
+  });
+  pg.addEventListener('change', ev => { spCheck(); const el = ev.target; if (el.classList && el.classList.contains('sp-min')) spSaveMin(el); });
+  pg.addEventListener('keydown', ev => { if (ev.key === 'Enter' && ev.target.classList && ev.target.classList.contains('sp-min')) ev.target.blur(); });
+  pg.addEventListener('click', ev => {
+    const c = ev.target.closest('[data-f]');
+    if (c) { SP.f = c.dataset.f; SP.limit = 120; pg.querySelectorAll('#sp_p_mats [data-f]').forEach(x => x.classList.toggle('on', x === c)); spPaintMats(); return; }
+    const e = ev.target.closest('[data-act]'); if (!e) return;
+    if (e.dataset.act === 'edit') openEditMat(e.dataset.code);
+    else if (e.dataset.act === 'more') { SP.limit += 200; spPaintMats(); }
+  });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && SP.open && !(window.Swal && Swal.isVisible())) spClose(); });
+  $('sp_nav').innerHTML = SP_TABS.map(t => `<button type="button" class="sp-tab" data-t="${t[0]}"><i class="fa-solid ${t[1]}"></i><span>${t[2]}</span></button>`).join('');
+}
+async function openSettings(tab) {
   if (needAdmin()) return;
   Swal.fire({ title: 'กำลังโหลดการตั้งค่า...', allowOutsideClick: false, showConfirmButton: false, didOpen: () => Swal.showLoading() });
   let st; try { st = await api('getSettings'); } catch (e) { Swal.close(); return showError(e); }
-  let newPw = '', initSnap = '', discard = false;
-  const val = () => ({ notifyEmail: $('st_mail').value.trim(), webUrl: $('st_url').value.trim(), lineToken: $('st_ltok').value.trim(), lineUserId: $('st_luid').value.trim(), alwaysEmail: $('st_always').checked, lineEnabled: $('st_lon').checked, lineBatchSec: $('st_lbatch').value });
-  const r = await Swal.fire({
-    title: 'ตั้งค่าระบบ', width: 520, showCancelButton: true, showDenyButton: true,
-    showLoaderOnConfirm: true, showLoaderOnDeny: true, allowOutsideClick: false, allowEscapeKey: false,
-    confirmButtonText: 'บันทึก', cancelButtonText: 'ปิด', denyButtonText: 'ส่งอีเมลทดสอบ', confirmButtonColor: '#4f46e5', denyButtonColor: '#64748b',
-    html: `<div style="text-align:left;font-size:.85rem">
-      <div style="background:#eef2ff;border-radius:10px;padding:8px 12px;margin-bottom:12px;font-size:.78rem;color:#3730a3;line-height:1.6"><b>ค่าที่บันทึกไว้ในระบบตอนนี้</b> (ทุกเครื่องเห็นเหมือนกัน)<br>
-        อีเมลรับแจ้ง: ${esc(st.notifyEmail || '(ยังไม่ได้ตั้ง)')}<br>
-        ส่งอีเมลทุกครั้งด้วย: <b>${st.alwaysEmail ? 'เปิด' : 'ปิด'}</b> · ส่ง LINE: <b>${st.lineEnabled ? 'เปิด' : 'ปิด'}</b> · LINE ${st.lineConfigured ? 'ตั้งค่าแล้ว' : 'ยังไม่ได้ตั้งค่า'} · รวมการ์ด ${esc(st.lineBatchSec)} วินาที</div>
-      <label class="lbl">อีเมลรับแจ้งเมื่อมีคำขอเบิก (หลายอีเมลคั่นด้วย , )</label>
-      <input id="st_mail" class="inp mt-1" value="${esc(st.notifyEmail)}" placeholder="boss@gmail.com">
-      <label class="lbl" style="display:block;margin-top:12px">ลิงก์หน้าเว็บนี้ (แนบไปในอีเมล)</label>
-      <input id="st_url" class="inp mt-1" value="${esc(st.webUrl || (location.origin + location.pathname))}">
-      <label style="display:flex;gap:8px;align-items:center;margin-top:10px;font-size:.82rem"><input type="checkbox" id="st_always" ${st.alwaysEmail ? 'checked' : ''}> ส่งอีเมลทุกครั้งด้วย (ปกติส่งเมลเฉพาะเมื่อ LINE ส่งไม่สำเร็จ)</label>
-      <div style="margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0"><b>แจ้งเตือนทาง LINE</b> <span class="lbl">${st.lineConfigured ? '(ตั้งค่าแล้ว · ใช้โควตาเดือนนี้ ' + st.lineUsed + '/' + st.lineLimit + ')' : '(ยังไม่ได้ตั้งค่า)'}</span>
-        <label style="display:flex;gap:8px;align-items:center;margin-top:8px;font-size:.82rem"><input type="checkbox" id="st_lon" ${st.lineEnabled ? 'checked' : ''}> ส่งแจ้งเตือนทาง LINE <span class="lbl">(ถ้าปิด ระบบจะส่งอีเมลแทน)</span></label>
-        <label class="lbl" style="display:block;margin-top:8px">รวมคำขอที่เข้ามาใกล้กันเป็นการ์ด LINE เดียว (ประหยัดโควตา)</label>
-        <select id="st_lbatch" class="inp mt-1">${(() => { const o = [[0, 'ไม่รวม ส่งทันทีทุกคำขอ'], [30, 'ภายใน 30 วินาที'], [60, 'ภายใน 1 นาที'], [120, 'ภายใน 2 นาที'], [300, 'ภายใน 5 นาที']]; const cur = Number(st.lineBatchSec); if (!o.some(x => x[0] === cur)) o.push([cur, 'ภายใน ' + cur + ' วินาที']); return o.map(x => `<option value="${x[0]}"${x[0] === cur ? ' selected' : ''}>${x[1]}</option>`).join(''); })()}</select>
-        <div class="lbl" style="margin-top:4px">คำขอแรกส่งทันที คำขอที่เข้ามาต่อภายในช่วงนี้จะรวมเป็นการ์ดเดียว (นับเป็น 1 ข้อความ)${st.lineQueued ? ' · ตอนนี้รอส่งอยู่ ' + st.lineQueued + ' คำขอ' : ''}</div>
-        <input id="st_ltok" type="password" class="inp mt-2" autocomplete="off" placeholder="${st.lineConfigured ? 'Channel access token (เว้นว่างถ้าไม่เปลี่ยน)' : 'Channel access token'}">
-        <input id="st_luid" class="inp mt-2" autocomplete="off" value="${esc(st.lineUserId)}" placeholder="User ID ของแอดมิน (ขึ้นต้นด้วย U)">
-        <div style="margin-top:8px;display:flex;gap:12px;font-size:.8rem"><button type="button" id="st_ltest" style="color:#4f46e5;font-weight:600">ส่ง LINE ทดสอบ</button>${st.lineConfigured ? '<button type="button" id="st_lclear" style="color:#e11d48">ลบการตั้งค่า LINE</button>' : ''}</div>
-        <div id="st_lmsg" style="margin-top:6px;font-size:.78rem;color:#64748b">${st.lineLog ? 'ผลส่งล่าสุด: ' + esc(st.lineLog) : ''}</div></div>
-      <div style="margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0"><b>เปลี่ยนรหัสผ่านแอดมิน</b> <span class="lbl">(เว้นว่างถ้าไม่เปลี่ยน)</span>
-        <input id="st_pw1" type="password" class="inp mt-2" placeholder="รหัสผ่านใหม่ (อย่างน้อย 6 ตัว)" autocomplete="new-password">
-        <input id="st_pw2" type="password" class="inp mt-2" placeholder="พิมพ์รหัสผ่านใหม่อีกครั้ง" autocomplete="new-password"></div>
-      <div style="margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0"><b>ความเร็วระบบ</b> <span class="lbl">(เวลาที่ใช้ของแต่ละคำสั่ง)</span>
-        <div style="margin-top:6px;display:flex;gap:12px;font-size:.8rem"><button type="button" id="st_perf" style="color:#4f46e5;font-weight:600">ดูความเร็ว</button><button type="button" id="st_perfreset" style="color:#64748b">เริ่มนับใหม่</button></div>
-        <div id="st_perfout" style="margin-top:6px;font-size:.72rem;color:#334155;overflow-x:auto"></div></div>
-      <details open style="margin-top:16px;padding-top:12px;border-top:1px solid #e2e8f0">
-        <summary style="cursor:pointer;font-weight:700">ประวัติการตั้งค่า <span class="lbl">${(st.history || []).length ? '(ล่าสุด ' + esc(st.history[0].t) + ' · ' + st.history.length + ' ครั้ง)' : '(ยังไม่มีประวัติ)'}</span></summary>
-        <div style="margin-top:8px;max-height:220px;overflow:auto;font-size:.78rem">${(st.history || []).length ? st.history.map(h => `<div style="padding:6px 0;border-bottom:1px dashed #e2e8f0"><b style="color:#4f46e5">${esc(h.t)}</b>${(h.c || []).map(x => `<div style="color:#475569;margin-top:2px">• ${esc(x)}</div>`).join('')}</div>`).join('') : '<div class="lbl">บันทึกเมื่อมีการแก้ไขการตั้งค่าครั้งต่อไป (ไม่เก็บ token หรือรหัสผ่านจริง)</div>'}</div>
-      </details></div>`,
-    didOpen: () => {
-      initSnap = JSON.stringify(val());
-      const dirty = () => !discard && (JSON.stringify(val()) !== initSnap || $('st_pw1').value || $('st_pw2').value || $('st_ltok').value);
-      // กันปิดหน้าต่างทิ้งโดยไม่ได้บันทึก (ปุ่ม "ปิด")
-      Swal.getPopup().addEventListener('click', ev => {
-        if (!ev.target.closest || !ev.target.closest('.swal2-cancel') || !dirty()) return;
-        ev.stopPropagation(); ev.preventDefault();
-        if (confirm('มีการแก้ไขที่ยังไม่ได้บันทึก ต้องการปิดโดยไม่บันทึกหรือไม่?')) { discard = true; Swal.clickCancel(); }
-      }, true);
-      const msg = t => { $('st_lmsg').textContent = t; };
-      const perf = async reset => {
-        const out = $('st_perfout'); out.textContent = 'กำลังโหลด...';
-        try {
-          const p = await api('getPerf', !!reset), c = window.__perf || {};
-          const rows = (p.rows || []).map(r => { const k = c[r.fn]; return `<tr><td>${esc(r.fn)}</td><td style="text-align:right">${r.n}</td><td style="text-align:right">${r.avg}</td><td style="text-align:right">${r.max}</td><td style="text-align:right">${k ? Math.round(k.t / k.n) : '-'}</td></tr>`; }).join('');
-          out.innerHTML = rows ? `<table style="width:100%;border-collapse:collapse"><tr style="color:#64748b"><th style="text-align:left">คำสั่ง</th><th>ครั้ง</th><th>เซิร์ฟเวอร์เฉลี่ย (ms)</th><th>สูงสุด</th><th>เครื่องนี้รวมเครือข่าย (ms)</th></tr>${rows}</table><div style="margin-top:4px;color:#94a3b8">นับตั้งแต่ ${p.since ? new Date(p.since).toLocaleString('th-TH') : '-'} · คำสั่งที่เฉลี่ยช้าและถูกเรียกบ่อยอยู่บนสุด</div>` : 'ยังไม่มีข้อมูล ลองใช้งานสักพักแล้วกดดูใหม่';
-        } catch (e) { out.textContent = 'ไม่สำเร็จ: ' + ((e && e.message) || e); }
-      };
-      $('st_perf').onclick = () => perf(false); $('st_perfreset').onclick = () => perf(true);
-      $('st_ltest').onclick = async () => {
-        msg('กำลังส่ง...');
-        try { await api('saveSettings', val()); msg(await api('sendTestLine')); $('st_ltok').value = ''; } catch (e) { msg('ไม่สำเร็จ: ' + ((e && e.message) || e)); }
-      };
-      const cl = $('st_lclear');
-      if (cl) cl.onclick = async () => {
-        try { await api('saveSettings', Object.assign(val(), { lineToken: '', lineUserId: '', clearLine: true })); $('st_luid').value = ''; msg('ลบการตั้งค่า LINE แล้ว'); } catch (e) { msg('ไม่สำเร็จ: ' + ((e && e.message) || e)); }
-      };
-    },
-    preConfirm: async () => {
-      const f = val(), p1 = $('st_pw1').value, p2 = $('st_pw2').value;
-      if (p1 || p2) {
-        if (p1.length < 6) { Swal.showValidationMessage('รหัสผ่านใหม่ต้องมีอย่างน้อย 6 ตัวอักษร'); return false; }
-        if (p1 !== p2) { Swal.showValidationMessage('รหัสผ่านทั้งสองช่องไม่ตรงกัน'); return false; }
-        f.newPassword = p1;
-      }
-      try {
-        const res = await api('saveSettings', f); newPw = f.newPassword || '';
-        // อ่านกลับจากเซิร์ฟเวอร์เพื่อยืนยันว่าบันทึกจริง
-        const chk = await api('getSettings');
-        if (!!chk.alwaysEmail !== !!f.alwaysEmail || !!chk.lineEnabled !== !!f.lineEnabled) throw new Error('บันทึกแล้วแต่ค่าในระบบไม่ตรงกับที่ตั้ง กรุณาลองบันทึกอีกครั้ง');
-        res.message += '\nส่งอีเมลทุกครั้ง: ' + (chk.alwaysEmail ? 'เปิด' : 'ปิด') + ' · ส่ง LINE: ' + (chk.lineEnabled ? 'เปิด' : 'ปิด');
-        return res;
-      }
-      catch (e) { Swal.showValidationMessage((e && e.message) || e); return false; }
-    },
-    preDeny: async () => {
-      try { await api('saveSettings', val()); Swal.showValidationMessage(await api('sendTestEmail')); }
-      catch (e) { Swal.showValidationMessage((e && e.message) || e); }
-      return false;
-    }
-  });
-  if (r.isConfirmed && r.value) {
-    if (newPw) { window.ADMIN_PW = newPw; try { sessionStorage.setItem('adm', newPw); } catch (e) {} }
-    Swal.fire({ icon: 'success', title: 'บันทึกแล้ว', html: esc(r.value.message).replace(/\n/g, '<br>'), timer: 3500, showConfirmButton: true, confirmButtonText: 'ตกลง' });
+  Swal.close();
+  spInit();
+  SP.st = st; SP.q = ''; SP.f = 'all'; SP.limit = 120; SP.open = true;
+  spPaintNotify(); spPaintSec(); spPaintSys(); spPaintMatsShell();
+  spSnap(); spCheck();
+  $('setPage').classList.add('open'); document.body.style.overflow = 'hidden';
+  spTab(typeof tab === 'string' && SP_TABS.some(t => t[0] === tab) ? tab : (SP.tab || 'notify'));
+}
+// ปิดหน้าตั้งค่า (ถามก่อนถ้ามีการแก้ไขที่ยังไม่บันทึก) คืน true ถ้าปิดแล้ว
+async function spClose(force) {
+  if (!force && spDirty()) {
+    const r = await Swal.fire({ icon: 'question', title: 'มีการแก้ไขที่ยังไม่ได้บันทึก', text: 'ต้องการปิดโดยไม่บันทึกหรือไม่?', showCancelButton: true, confirmButtonText: 'ปิดโดยไม่บันทึก', cancelButtonText: 'กลับไปแก้ไข', confirmButtonColor: '#e11d48' });
+    if (!r.isConfirmed) return false;
   }
+  SP.open = false; clearTimeout(SP.qt);
+  $('setPage').classList.remove('open'); $('sp_save').classList.remove('show'); document.body.style.overflow = '';
+  return true;
+}
+async function spAddMat() { if (await spClose()) openMat(); }
+function spReset() { spPaintNotify(); spPaintSec(); spSnap(); spCheck(); }
+async function spReload() { SP.st = await api('getSettings'); spPaintNotify(); spPaintSec(); spSnap(); spCheck(); }
+async function spSave() {
+  const f = spVal(), p1 = $('st_pw1').value, p2 = $('st_pw2').value, btn = $('sp_savebtn');
+  if (p1 || p2) {
+    if (p1.length < 6) { spTab('sec'); $('st_pw1').focus(); return Swal.fire({ icon: 'warning', title: 'รหัสผ่านใหม่สั้นเกินไป', text: 'ต้องมีอย่างน้อย 6 ตัวอักษร', confirmButtonColor: '#4f46e5' }); }
+    if (p1 !== p2) { spTab('sec'); $('st_pw2').focus(); return Swal.fire({ icon: 'warning', title: 'รหัสผ่านทั้งสองช่องไม่ตรงกัน', confirmButtonColor: '#4f46e5' }); }
+    f.newPassword = p1;
+  }
+  const lab = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>กำลังบันทึก...';
+  try {
+    const res = await api('saveSettings', f);
+    if (f.newPassword) { window.ADMIN_PW = f.newPassword; try { sessionStorage.setItem('adm', f.newPassword); } catch (e) {} }   // รหัสใหม่ใช้ได้ทันที: เปลี่ยนก่อนเรียกคำสั่งถัดไป
+    const chk = await api('getSettings');
+    if (!!chk.alwaysEmail !== !!f.alwaysEmail || !!chk.lineEnabled !== !!f.lineEnabled) throw new Error('บันทึกแล้วแต่ค่าในระบบไม่ตรงกับที่ตั้ง กรุณาลองบันทึกอีกครั้ง');
+    SP.st = chk; spPaintNotify(); spPaintSec(); spSnap(); spCheck();
+    Swal.fire({ icon: 'success', title: 'บันทึกแล้ว', html: esc((res && res.message) || '').replace(/\n/g, '<br>'), timer: 2600, showConfirmButton: false });
+  } catch (e) { Swal.fire({ icon: 'error', title: 'บันทึกไม่สำเร็จ', text: (e && e.message) || String(e), confirmButtonColor: '#4f46e5' }); }
+  btn.disabled = false; btn.innerHTML = lab;
+}
+// ปุ่มทดสอบ: บันทึกค่าปัจจุบันก่อน (เหมือนเดิม) แล้วค่อยส่งทดสอบ
+async function spTestMail() {
+  spSet('sp_mailmsg', 'กำลังส่ง...');
+  try { await api('saveSettings', spVal()); const r = await api('sendTestEmail'); await spReload(); spSet('sp_mailmsg', esc(r)); }
+  catch (e) { spSet('sp_mailmsg', '<span class="bad">ไม่สำเร็จ: ' + esc((e && e.message) || e) + '</span>'); }
+}
+async function spTestLine() {
+  spSet('sp_lmsg', 'กำลังส่ง...');
+  try { await api('saveSettings', spVal()); const r = await api('sendTestLine'); await spReload(); spSet('sp_lmsg', esc(r)); }
+  catch (e) { spSet('sp_lmsg', '<span class="bad">ไม่สำเร็จ: ' + esc((e && e.message) || e) + '</span>'); }
+}
+async function spClearLine() {
+  const c = await Swal.fire({ icon: 'warning', title: 'ลบการตั้งค่า LINE?', text: 'จะลบ token และ User ID ที่บันทึกไว้ ระบบจะส่งอีเมลแทน', showCancelButton: true, confirmButtonText: 'ลบ', cancelButtonText: 'ยกเลิก', confirmButtonColor: '#e11d48' });
+  if (!c.isConfirmed) return;
+  try { await api('saveSettings', Object.assign(spVal(), { lineToken: '', lineUserId: '', clearLine: true })); await spReload(); spSet('sp_lmsg', 'ลบการตั้งค่า LINE แล้ว'); }
+  catch (e) { spSet('sp_lmsg', '<span class="bad">ไม่สำเร็จ: ' + esc((e && e.message) || e) + '</span>'); }
+}
+async function spPerf(reset) {
+  const out = $('sp_perfout'); out.textContent = 'กำลังโหลด...';
+  try {
+    const p = await api('getPerf', !!reset), c = window.__perf || {};
+    const rows = (p.rows || []).map(r => { const k = c[r.fn]; return `<tr><td>${esc(r.fn)}</td><td style="text-align:right">${r.n}</td><td style="text-align:right">${r.avg}</td><td style="text-align:right">${r.max}</td><td style="text-align:right">${k ? Math.round(k.t / k.n) : '-'}</td></tr>`; }).join('');
+    out.innerHTML = rows ? `<div class="sp-tblw"><table class="sp-tbl"><tr><th style="text-align:left">คำสั่ง</th><th>ครั้ง</th><th>เซิร์ฟเวอร์เฉลี่ย (ms)</th><th>สูงสุด</th><th>เครื่องนี้รวมเครือข่าย (ms)</th></tr>${rows}</table></div><div class="sp-help">นับตั้งแต่ ${p.since ? new Date(p.since).toLocaleString('th-TH') : '-'} · คำสั่งที่เฉลี่ยช้าและถูกเรียกบ่อยอยู่บนสุด</div>` : 'ยังไม่มีข้อมูล ลองใช้งานสักพักแล้วกดดูใหม่';
+  } catch (e) { out.textContent = 'ไม่สำเร็จ: ' + ((e && e.message) || e); }
+}
+// แก้ Stock ขั้นต่ำในแถว: ไม่แตะชื่อ/หน่วย/ประวัติ (onlyMin)
+async function spSaveMin(el) {
+  const code = el.dataset.code, it = (stock || []).find(x => x.code === code);
+  if (!it || !book) return;
+  const v = String(el.value).trim(), n = Number(v);
+  if (v === '' || !isFinite(n) || n < 0) { el.value = it.minStock; return Swal.fire({ icon: 'warning', title: 'Stock ขั้นต่ำต้องเป็นตัวเลขตั้งแต่ 0 ขึ้นไป', confirmButtonColor: '#4f46e5' }); }
+  if (n === Number(it.minStock)) return;
+  el.disabled = true;
+  try {
+    await api('editMaterial', Object.assign(admArgs(), { book: book, code: code, onlyMin: true, minStock: n }));
+    it.minStock = n;
+    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'บันทึก Stock ขั้นต่ำแล้ว', timer: 1500, showConfirmButton: false });
+    loadAllData();
+  } catch (e) { el.value = it.minStock; Swal.fire({ icon: 'error', title: 'บันทึกไม่สำเร็จ', text: (e && e.message) || String(e), confirmButtonColor: '#4f46e5' }); }
+  el.disabled = false;
 }
 /* ===== จำชื่อผู้ใช้ทั่วไป: กรอกครั้งแรก ครั้งต่อไปเติมในช่องผู้เบิก/ผู้คืนให้เอง (ชื่อจะตรงกันทุกครั้ง) ===== */
 const normName = v => String(v == null ? '' : v).replace(/\s+/g, ' ').trim();
@@ -2525,7 +2767,7 @@ function applyAll(all, cached) {
   histAll = all.history || []; applyHistFilter(); fillPeople();
   stock = r.items; lowMap = {}; stock.forEach(i => lowMap[i.code] = i.isLow);
   $('stat-total').innerText = r.totalItems; $('stat-normal').innerText = r.normalStockCount; $('stat-low').innerText = r.lowStockCount; paintLowChip(r.lowStockCount, r.normalStockCount);
-  paintMatList('inv'); paintMatList('rep'); paintAll(); renderInventory(); renderReport(); renderSide(); fillAdjSel(); renderCount(); fillUnits();
+  paintMatList('inv'); paintMatList('rep'); paintAll(); renderInventory(); renderReport(); renderSide(); fillAdjSel(); renderCount(); fillUnits(); spRefresh();
   if (cached) return;
   if (isAdmin) { if (Date.now() - (window.__reqT || 0) > 4000) loadRequests(true); } else paintMyReqs();   // ถ้าเพิ่งโหลดคำขอไปเมื่อกี้ (ขนานตอนเปิดหน้า) ไม่ต้องโหลดซ้ำ
   $('refreshIcon').classList.remove('fa-spin');
@@ -3896,5 +4138,25 @@ function toggleFab(force) {
   sync();
 })();
 </script>
+<div id="setPage" class="no-print" role="dialog" aria-modal="true" aria-label="ตั้งค่า">
+  <div class="sp-hdr">
+    <button type="button" class="sp-back" id="sp_back" aria-label="กลับ"><i class="fa-solid fa-arrow-left"></i></button>
+    <div class="sp-ttl">ตั้งค่า<small id="sp_sub"></small></div>
+  </div>
+  <div class="sp-body">
+    <nav class="sp-nav" id="sp_nav" aria-label="หมวดการตั้งค่า"></nav>
+    <div class="sp-main" id="sp_main">
+      <section class="sp-pane" id="sp_p_notify"></section>
+      <section class="sp-pane" id="sp_p_mats"></section>
+      <section class="sp-pane" id="sp_p_books"></section>
+      <section class="sp-pane" id="sp_p_sec"></section>
+      <section class="sp-pane" id="sp_p_sys"></section>
+    </div>
+  </div>
+  <div class="sp-save" id="sp_save">
+    <div class="sp-save-t"><i class="fa-solid fa-circle-exclamation"></i>มีการเปลี่ยนแปลงที่ยังไม่บันทึก</div>
+    <div class="sp-save-b"><button type="button" class="sp-btn" onclick="spReset()">ยกเลิกการแก้ไข</button><button type="button" class="sp-btn pri" id="sp_savebtn" onclick="spSave()"><i class="fa-solid fa-check"></i>บันทึก</button></div>
+  </div>
+</div>
 </body>
 </html>
